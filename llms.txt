@@ -1,0 +1,24 @@
+# LegalSent API examples
+
+> Reference code for the LegalSent API, which sends legally recognised electronic communications by email and SMS (ERDS and QERDS under eIDAS, delivered through InfoCert GoNotice), follows their status and downloads the proof of delivery. Clients in Node.js and Python with no dependencies, runnable examples, and tests.
+
+There is no sandbox: a send delivers a real communication with legal effect and charges a prepaid wallet. Never send without the user's explicit confirmation, and never retry a send automatically. Both clients refuse to send unless called with an explicit confirm flag.
+
+## Docs
+
+- [API reference](docs/api-reference.md): every endpoint, field, error and limit, with recipes. Also at https://api.legalsent.com/llms-full.txt
+- [Rules for coding agents](AGENTS.md): what must not be done, and the facts that are easy to get wrong
+- [README](README.md): what is in the repository and how to run it
+
+## Code
+
+- [Node.js client](node/legalsent.mjs): one file, Node.js 20 or later
+- [Python client](python/legalsent.py): one file, standard library only
+- [Node.js examples](node/examples): check the account, send one document, follow a dispatch, send a campaign, manage contact lists
+- [Python examples](python/examples): check the account, send one document
+- [curl examples](curl/examples.sh): the same calls from a shell
+
+## Tests
+
+- [Smoke test](node/test/smoke.mjs): checks a real key and account without sending or spending
+- [Client tests](node/test/client.test.mjs): offline, against a local stand-in server

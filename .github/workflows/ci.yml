@@ -1,0 +1,26 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  offline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Node client, against a local stand-in server
+        run: node --test node/test/client.test.mjs
+      - name: Python client, against a local stand-in server
+        run: python -m unittest discover -s python -p "test_*.py"
+      - name: Every example parses
+        run: |
+          for f in node/examples/*.mjs node/test/smoke.mjs; do node --check "$f"; done
+          python -m py_compile python/legalsent.py python/examples/*.py
+          bash -n curl/examples.sh
