@@ -6,9 +6,9 @@ LegalSent sends legally recognised electronic communications by email and SMS: t
 
 - Base URL: `https://api.legalsent.com`
 - Version: 2.0 (2026-11-18)
-- Working examples: https://github.com/LegalSent/legalsent-api-examples
-- This document as plain Markdown, for tools and language models: `https://api.legalsent.com/llms-full.txt`
-- Support: support@legalsent.com. When an error is involved, quote its `requestId`
+- Working examples: [https://github.com/LegalSent/legalsent-api-examples](https://github.com/LegalSent/legalsent-api-examples)
+- This document as plain Markdown, for tools and language models: [https://api.legalsent.com/llms-full.txt](https://api.legalsent.com/llms-full.txt)
+- Support: [support@legalsent.com](mailto:support@legalsent.com). When an error is involved, quote its `requestId`
 
 ## Before you start
 
@@ -94,6 +94,7 @@ Values of `reason`:
 | `file_type_not_allowed` | sends, campaigns | A file is not PDF, plain text, JPEG or PNG |
 | `pdf_no_text` | sends | The PDF chosen to read the recipient from has no text (a scan) |
 | `missing_recipient_fields` | sends, re-send | The recipient lacks what the channel or the type requires; see `fields` |
+| `invalid_postcode`, `address_incomplete`, `unknown_country` | sends | Only when `recipientData.paese` is sent: the address does not hold together; see `fields` |
 | `invalid_id` | any | An identifier in the body or query is not a UUID; see `fields` |
 | `bulk_dispatch_not_found`, `contact_list_not_found` | sends, campaigns | The group or list does not exist for this account |
 | `invalid_status` | campaign list | Unknown `status` filter |
@@ -192,6 +193,8 @@ A dispatch is one communication to one recipient.
 | `telefono` | when `channels` has `SMS` | International format |
 | `codiceFiscale` | when `requestType` is `QERDS` | Italian tax code of the recipient |
 | `oggetto` | no | Subject; takes precedence over `emailSubject` |
+| `indirizzo`, `cap`, `citta` | no | Postal address, kept with the dispatch. All three or none |
+| `paese` | no | Country of the address, ISO 3166-1 alpha-2 (`IT`, `FR`, `GB`, ...). When it is sent, the address must be complete and `cap` must be a postcode of that country (`IT`: five digits); otherwise the send is refused with `invalid_postcode`, `address_incomplete` or `unknown_country` |
 
 Without `recipientData`, the recipient is read from the text (`content`, or the text of the PDF or text file) by an automatic extractor. It expects labelled lines such as `Nome e Cognome: Mario Rossi`, `Email: ...`, `Telefono: ...`, `Codice Fiscale: ...`. Extraction can misread a document. An integration should always send `recipientData`; fields given there win over extracted ones.
 
